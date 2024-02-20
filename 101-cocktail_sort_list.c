@@ -1,101 +1,74 @@
 #include "sort.h"
-
 /**
- * swap_tail - function to swap list
- *@list: list to be swapped
- *@head: head of list
- *@tail: tail of list
- *
- * Return - void
+ * swap - swaps both
+ * @p: first node to swap
+ * @c: second node to swap
+ * @list: list to set null or not
  */
-void swap_tail(listint_t **list, listint_t **head, listint_t **tail)
+void swap(listint_t *p, listint_t *c, listint_t **list)
 {
-	listint_t *temp = (*tail)->next;
-
-	if ((*tail)->prev != NULL)
+	if (!(p->prev))
 	{
-		(*tail)->prev->next = temp;
+		p->next = c->next;
+		if (c->next)
+			c->next->prev = p;
+		c->next = p;
+		c->prev = NULL;
+		p->prev = c;
+		*list = c;
 	}
 	else
-		*list = temp;
-	temp->prev = (*tail)->prev;
-	(*tail)->next = temp->next;
-	if (temp->next != NULL)
 	{
-		temp->next->prev = *tail;
+		c->prev->next = c->next;
+		if (c->next)
+			c->next->prev = c->prev;
+		p->prev->next = c;
+		c->prev = p->prev;
+		p->prev = c;
+		c->next = p;
 	}
-	else
-		*head = *tail;
-	(*tail)->prev = temp;
-	temp->next = *tail;
-	*tail = temp;
 }
 
 /**
- * swap_head - function to swap head of linked list
- *@list: doubly linked list to be sorted
- *@tail: tail of double linked list
- *@head: head of double linked list
- * Return - void
- */
-void swap_head(listint_t **list, listint_t **tail, listint_t **head)
-{
-	listint_t *temp = (*head)->prev;
-
-	if ((*head)->prev != NULL)
-		(*head)->next->prev = temp;
-	else
-		*tail = temp;
-	temp->next = (*head)->next;
-	(*head)->prev = temp->prev;
-	if (temp->prev != NULL)
-	{
-		temp->prev->next = *head;
-	}
-	else
-		*list = *head;
-	(*head)->next = temp;
-	temp->prev = *head;
-	*head = temp;
-}
-
-/**
- * cocktail_sort_list - function to sort doubly linked list w/ cocktail sort
- *@list: list to be sorted
- * Return - void
+ * cocktail_sort_list - inserts right unsorted side into left sorted side
+ * @list: doubly linked list to sort
  */
 void cocktail_sort_list(listint_t **list)
 {
-	bool booln = false;
-	listint_t *head;
-	listint_t *tail;
+	listint_t *c, *nextnode;
+	int swapped;
 
-	if (list == NULL || *list == NULL || (*list)->next == NULL)
+	if (list == NULL || !(*list) || (*list)->next == NULL)
 		return;
-	for (tail = *list; tail->next != NULL;)
-	{
-		tail = tail->next;
-	}
-	while (booln == false)
-	{
-		booln = true;
-		for (head = *list; head != tail; head = head->next)
+
+	c = (*list);
+	do {
+		swapped = 0;
+		while (c->next)
 		{
-			if (head->n > head->next->n)
+			nextnode = c->next;
+			if (nextnode && c->n > nextnode->n)
 			{
-				swap_tail(list, &tail, &head);
-				print_list((const listint_t *) *list);
-				booln = false;
+				swap(c, nextnode, list);
+				swapped = 1;
+				print_list((*list));
 			}
+			else
+				c = c->next;
 		}
-		for (head = head->prev; head != *list; head = head->prev)
+		c = c->prev;
+		while (c->prev)
 		{
-			if (head->n < head->prev->n)
+			nextnode = c->prev;
+			if (nextnode && c->n < nextnode->n)
 			{
-				swap_head(list, &tail, &head);
-				print_list((const listint_t *) *list);
-				booln = false;
+				swap(nextnode, c, list);
+				swapped = 1;
+				print_list((*list));
 			}
+			else
+				c = c->prev;
 		}
-	}
+		c = c->next;
+	} while (swapped);
 }
