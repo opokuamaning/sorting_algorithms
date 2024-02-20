@@ -1,57 +1,80 @@
 #include "sort.h"
 /**
- * quick_sort - function that sorts an array
- * of integers in ascending order using the
- * quick sort algorithm
- *
- * @array: input arrray
- * @size: size of the array
- * Return: no return
+ * swap_bubble - function to swap/sort.
+ *@a: to be sorted.
+ *@b: to be sorted.
+ * Return: void.
+ */
+void swap_bubble(int *a, int *b)
+{
+	int temp;
+
+	temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+/**
+ * partition - function to sort using Lomuto scheme.
+ *@array: array to be sorted.
+ *@size: size of array.
+ *@low: divider/partition.
+ *@high: divider/partition.
+ * Return: partition.
+ */
+int partition(int *array, size_t size, int low, int high)
+{
+	int *pivot, high1, low1;
+
+	pivot = array + high;
+	for (high1 = low1 = low; low1 < high; low1++)
+	{
+		if (array[low1] < *pivot)
+		{
+			if (high1 < low1)
+			{
+				swap_bubble(array + low1, array + high1);
+				print_array(array, size);
+			}
+			high1++;
+		}
+	}
+
+	if (array[high1] > *pivot)
+	{
+		swap_bubble(array + high1, pivot);
+		print_array(array, size);
+	}
+	return (high1);
+}
+
+/**
+ * partition_sort - recursion function to call partition sort
+ *@array: array to be sorted.
+ *@size: size of array.
+ *@low: partition divider.
+ *@high: partition divider.
+ * Return: void.
+ */
+void partition_sort(int *array, size_t size, int low, int high)
+{
+	int part;
+
+	if (high - low > 0)
+	{
+		part = partition(array, size, low, high);
+		partition_sort(array, size, low, part - 1);
+		partition_sort(array, size, part + 1, high);
+	}
+}
+
+/**
+ * quick_sort - quick sort function for array.
+ *@array: array to be sorted.
+ *@size: size to be sorted.
+ * Return: void.
  */
 void quick_sort(int *array, size_t size)
 {
-	_qsort(array, 0, size - 1, size);
-}
-/**
- * _qsort - auxiliar function for the
- * quick_sort function
- * @a: input arrray
- * @low: index for the first element
- * @high: index for the last element
- * @size: size of the array
- * Return: no return
- */
-void _qsort(int *a, int low, int high, int size)
-{
-	int p, w, i;
-	int tmp;
-
-	if (low < high)
-	{
-		p = high;
-		w = low;
-		for (i = low; i < high; i++)
-		{
-			if (a[i] < a[p])
-			{
-				if (i != w)
-				{
-					tmp = a[i];
-					a[i] = a[w];
-					a[w] = tmp;
-					print_array(a, size);
-				}
-				w++;
-			}
-		}
-		if (w != p && a[w] != a[p])
-		{
-			tmp = a[w];
-			a[w] = a[p];
-			a[p] = tmp;
-			print_array(a, size);
-		}
-		_qsort(a, low, w - 1, size);
-		_qsort(a, w + 1, high, size);
-	}
+	partition_sort(array, size, 0, size - 1);
 }
