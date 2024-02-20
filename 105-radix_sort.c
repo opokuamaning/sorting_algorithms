@@ -1,6 +1,4 @@
 #include "sort.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 /**
  * getMax - Find the maximum element in an array
@@ -46,10 +44,10 @@ void countSort(int *array, size_t size, int exp)
     for (i = 1; i < 10; i++)
         count[i] += count[i - 1];
 
-    for (i = size - 1; i < size; i--)
+    for (i = size; i > 0; i--)
     {
-        output[count[(array[i] / exp) % 10] - 1] = array[i];
-        count[(array[i] / exp) % 10]--;
+        output[count[(array[i - 1] / exp) % 10] - 1] = array[i - 1];
+        count[(array[i - 1] / exp) % 10]--;
     }
 
     for (i = 0; i < size; i++)
