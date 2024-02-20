@@ -37,7 +37,7 @@ void merge_sort(int *array, size_t size);
 void heap_sort(int *array, size_t size);
 void bitonic_sort(int *array, size_t size);
 void quick_sort_hoare(int *array, size_t size);
-void quicksort_hoare(int *array, int low, int high, size_t size);
-void swap(int *a, int *b);
-int hoare_partition(int *array, int low, int high, size_t size);
+void swap_ints(int *a, int *b);
+int hoare_partition(int *array, size_t size, int left, int right);
+void hoare_sort(int *array, size_t size, int left, int right);
 #endif
