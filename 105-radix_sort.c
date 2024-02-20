@@ -1,81 +1,35 @@
 #include "sort.h"
-
 /**
- * get_max - To get the max of the array
- *@array: array to be sorted
- *@size: size to be sorted
+ * radix_sort - sorts an array of integers in ascending
+ * order using the Radix sort algorithm
  *
- * Return: int
- */
-int get_max(int *array, int size)
-{
-	int mx, i;
-
-	for (mx = array[0], i = 1; i < size; i++)
-	{
-		if (array[i] > mx)
-		{
-			mx = array[i];
-		}
-	}
-	return (mx);
-}
-
-/**
- * lsd_sort - sorting algo
- *@array: array to be sorted
- *@size: size of array to be sorted
- *@exp: exp
- *@copy: copy
- * Return: void
- */
-void lsd_sort(int *array, size_t size, int exp, int *copy)
-{
-	size_t i;
-	int bucket[10] = {0};
-
-	for (i = 0; i < size; i++)
-	{
-		bucket[(array[i] / exp) % 10]++;
-	}
-
-	for (i = 1; i < 10; i++)
-	{
-		bucket[i] = bucket[i] + bucket[i - 1];
-	}
-
-	for (i = size - 1; (int)i >= 0; i--)
-	{
-		copy[bucket[(array[i] / exp) % 10] - 1] = array[i];
-		bucket[(array[i] / exp) % 10]--;
-	}
-
-	for (i = 0; i < size; i++)
-	{
-		array[i] = copy[i];
-	}
-}
-/**
- * radix_sort - radix sorting algo function
- *@array: array to be sorted
- *@size: size of array to be sorted
- * Return: void
+ * @array: input array
+ * @size: size of the array
  */
 void radix_sort(int *array, size_t size)
 {
-	int mx, exp, *copy;
+	int flag = 1, n = 10;
+	size_t i, f;
 
-	if (array == NULL || size < 2)
+	if (!array || size == 1)
 		return;
-	copy = malloc(sizeof(int) * size);
-	if (copy == NULL)
-		return;
-
-	mx = get_max(array, size);
-	for (exp = 1; mx / exp > 0; exp *= 10)
+	while (flag)
 	{
-		lsd_sort(array, size, exp, copy);
+		flag = 0;
+		for (i = 1, f = 1; i <  size; i++, f++)
+		{
+			if ((array[i - 1] % (n * 10)) / ((n * 10) / 10) > 0)
+				flag = 1;
+			if (((array[i - 1] % n) / (n / 10)) > ((array[i] % n) / (n / 10)))
+			{
+				array[i - 1] = array[i - 1] + array[i];
+				array[i] = array[i - 1] - array[i];
+				array[i - 1] = array[i - 1] - array[i];
+				if ((i - 1) > 0)
+					i = i - 2;
+			}
+		}
 		print_array(array, size);
+		n = n * 10;
 	}
-	free(copy);
 }
