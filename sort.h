@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 /**
  * struct listint_s - Doubly linked list node
  *
@@ -20,6 +23,7 @@ typedef struct listint_s
 /* print functions */
 void print_list(const listint_t *list);
 void print_array(const int *array, size_t size);
+void radix_sort(int *array, size_t size);
 
 /* sorting functions */
 void bubble_sort(int *array, size_t size);
